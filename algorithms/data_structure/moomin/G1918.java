@@ -66,7 +66,7 @@ public class G1918 {
         while(!stack.isEmpty()){
             ans.append(stack.pop());
         }
-        
+
         System.out.println(ans);
     }
 }

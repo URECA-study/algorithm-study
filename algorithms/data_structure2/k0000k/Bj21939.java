@@ -14,15 +14,15 @@ class Problem {
 
     @Override
     public boolean equals(Object o) {
-        return (this.number == ((Problem2) o).number);
+        return (this.number == ((Problem) o).number);
     }
 }
 
 public class Bj21939 {
 
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    public static PriorityQueue<Problem2> hardProblems;
-    public static PriorityQueue<Problem2> easyProblems;
+    public static PriorityQueue<Problem> hardProblems;
+    public static PriorityQueue<Problem> easyProblems;
 
     public static void main(String[] args) throws IOException {
         init();
@@ -31,7 +31,7 @@ public class Bj21939 {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int p = Integer.parseInt(st.nextToken());
             int l = Integer.parseInt(st.nextToken());
-            Problem2 problem = new Problem2(p, l);
+            Problem problem = new Problem(p, l);
             hardProblems.add(problem);
             easyProblems.add(problem);
         }
@@ -43,7 +43,7 @@ public class Bj21939 {
             if (command.equals("add")) {
                 int p = Integer.parseInt(inputs[1]);
                 int l = Integer.parseInt(inputs[2]);
-                Problem2 problem = new Problem2(p, l);
+                Problem problem = new Problem(p, l);
                 hardProblems.add(problem);
                 easyProblems.add(problem);
             }
@@ -59,7 +59,7 @@ public class Bj21939 {
             }
             else if (command.equals("solved")) {
                 int number = Integer.parseInt(inputs[1]);
-                Problem2 problem = new Problem2(number, 0);
+                Problem problem = new Problem(number, 0);
                 hardProblems.remove(problem);
                 easyProblems.remove(problem);
             }
@@ -67,9 +67,9 @@ public class Bj21939 {
     }
 
     private static void init() {
-        easyProblems = new PriorityQueue<>(new Comparator<Problem2>() {
+        easyProblems = new PriorityQueue<>(new Comparator<Problem>() {
             @Override
-            public int compare(Problem2 o1, Problem2 o2) {
+            public int compare(Problem o1, Problem o2) {
                 if (o1.difficulty == o2.difficulty) {
                     return o1.number - o2.number;
                 }
@@ -77,9 +77,9 @@ public class Bj21939 {
             }
         });
 
-        hardProblems = new PriorityQueue<>(new Comparator<Problem2>() {
+        hardProblems = new PriorityQueue<>(new Comparator<Problem>() {
             @Override
-            public int compare(Problem2 o1, Problem2 o2) {
+            public int compare(Problem o1, Problem o2) {
                 if (o2.difficulty == o1.difficulty) {
                     return o2.number - o1.number;
                 }

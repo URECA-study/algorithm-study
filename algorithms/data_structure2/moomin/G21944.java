@@ -1,11 +1,12 @@
 package data_structure2.moomin;
 
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class G21944 {
 
     static int N, M, P, L, G;
+
     // 레벨 set
     static TreeSet<Integer> levelSet;
     // 문제 - 레벨 쌍
@@ -47,10 +48,27 @@ public class G21944 {
             if(prompt.equals("recommend")){
                 int algo = Integer.parseInt(st.nextToken());
                 if(Integer.parseInt(st.nextToken()) == 1){
-                    System.out.println(problemsByLevel.get(AlgoByLevel.get(algo).first()).first());
+                    // 그 난이도의 문제의 알고리즘이 algo일 때!!
+                    Iterator<Integer> iter = problemsByLevel.get(AlgoByLevel.get(algo).first()).iterator();
+                    while(iter.hasNext()){
+                        int problem = iter.next();
+                        if(pG.get(problem) == algo){
+                            System.out.println(problem);
+                            break;
+                        }
+                    }
+                    //System.out.println(problemsByLevel.get(AlgoByLevel.get(algo).first()).first());
                     continue;
                 }
-                System.out.println(problemsByLevel.get(AlgoByLevel.get(algo).last()).last());
+                Iterator<Integer> iter = problemsByLevel.get(AlgoByLevel.get(algo).last()).descendingIterator();
+                while(iter.hasNext()){
+                    int problem = iter.next();
+                    if(pG.get(problem) == algo){
+                        System.out.println(problem);
+                        break;
+                    }
+                }
+                //System.out.println(problemsByLevel.get(AlgoByLevel.get(algo).last()).last());
                 continue;
             }
 
@@ -77,13 +95,6 @@ public class G21944 {
                         System.out.println(problemsByLevel.get(L).last());
                         continue;
                     }
-                    if(levelSet.lower(L) == null){
-                        System.out.println(-1);
-                        continue;
-                    }
-                    // 레벨에서 큰 문제 찾기
-                    System.out.println(problemsByLevel.get(levelSet.lower(L)).first());
-                    continue;
                 }
                 // 해당 난이도가 없으면
                 if(x == 1){

@@ -7,17 +7,15 @@ public class G21944 {
 
     static int N, M, P, L, G;
 
-    // 레벨 set
-    static TreeSet<Integer> levelSet;
     // 문제 - 레벨 쌍
     static HashMap<Integer, Integer> pL = new HashMap<>();
     // 문제 - 알고리즘 쌍
     static HashMap<Integer, Integer> pG = new HashMap<>();
 
-    // 알고리즘 별 - 난이도 분류표
+    // 알고리즘 별
     static HashMap<Integer, TreeSet<Integer>> AlgoByLevel = new HashMap<>();
-    // 난이도별 문제집 - 난이도가 높은 순 + 문제 정렬은 내림차순
-    static TreeMap<Integer, TreeSet<Integer>> problemsByLevel = new TreeMap<>((o1, o2) -> o2 - o1);
+    // 난이도별 문제집
+    static TreeMap<Integer, TreeSet<Integer>> problemsByLevel = new TreeMap<>();
 
     public static void main(String[] args) throws IOException {
 
@@ -49,18 +47,17 @@ public class G21944 {
                 int algo = Integer.parseInt(st.nextToken());
                 if(Integer.parseInt(st.nextToken()) == 1){
                     // 그 난이도의 문제의 알고리즘이 algo일 때!!
-                    Iterator<Integer> iter = problemsByLevel.get(AlgoByLevel.get(algo).first()).iterator();
-                    while(iter.hasNext()){
+                    Iterator<Integer> iter = problemsByLevel.get(AlgoByLevel.get(algo).last()).descendingIterator();
+                    while(iter.hasNext()) {
                         int problem = iter.next();
-                        if(pG.get(problem) == algo){
+                        if (pG.get(problem) == algo) {
                             System.out.println(problem);
                             break;
                         }
                     }
-                    //System.out.println(problemsByLevel.get(AlgoByLevel.get(algo).first()).first());
                     continue;
                 }
-                Iterator<Integer> iter = problemsByLevel.get(AlgoByLevel.get(algo).last()).descendingIterator();
+                Iterator<Integer> iter = problemsByLevel.get(AlgoByLevel.get(algo).first()).iterator();
                 while(iter.hasNext()){
                     int problem = iter.next();
                     if(pG.get(problem) == algo){
@@ -68,16 +65,15 @@ public class G21944 {
                         break;
                     }
                 }
-                //System.out.println(problemsByLevel.get(AlgoByLevel.get(algo).last()).last());
                 continue;
             }
 
             if(prompt.equals("recommend2")){
                 if(Integer.parseInt(st.nextToken()) == 1){
-                    System.out.println(problemsByLevel.get(problemsByLevel.firstKey()).first());
+                    System.out.println(problemsByLevel.get(problemsByLevel.lastKey()).last());
                     continue;
                 }
-                System.out.println(problemsByLevel.get(problemsByLevel.lastKey()).last());
+                System.out.println(problemsByLevel.get(problemsByLevel.firstKey()).first());
                 continue;
             }
 
@@ -85,34 +81,20 @@ public class G21944 {
                 int x = Integer.parseInt(st.nextToken());
                 L = Integer.parseInt(st.nextToken());
 
-                levelSet = new TreeSet<>(problemsByLevel.keySet());
-                levelSet.add(L);
-
-                // 해당 난이도가 있으면
-                if(problemsByLevel.containsKey(L)){
-                    if(x == 1){
-                        // 레벨에서 작은 문제 찾기
-                        System.out.println(problemsByLevel.get(L).last());
-                        continue;
-                    }
-                }
-                // 해당 난이도가 없으면
                 if(x == 1){
-                    if(levelSet.higher(L) == null){
+                    if(problemsByLevel.ceilingKey(L) == null){
                         System.out.println(-1);
                         continue;
                     }
-                    // 레벨에서 작은 문제 찾기
-                    System.out.println(problemsByLevel.get(levelSet.higher(L)).last());
+                    System.out.println(problemsByLevel.get(problemsByLevel.ceilingKey(L)).first());
                     continue;
                 }
 
-                // 레벨에서 큰 문제 찾기
-                if(levelSet.lower(L) == null){
+                if(problemsByLevel.lowerKey(L) == null){
                     System.out.println(-1);
                     continue;
                 }
-                System.out.println(problemsByLevel.get(levelSet.lower(L)).first());
+                System.out.println(problemsByLevel.get(problemsByLevel.lowerKey(L)).last());
                 continue;
             }
 
@@ -137,7 +119,7 @@ public class G21944 {
             problemsByLevel.get(l).add(p);
             return;
         }
-        problemsByLevel.put(l, new TreeSet<>((o1, o2) -> o2 - o1));
+        problemsByLevel.put(l, new TreeSet<>());
         problemsByLevel.get(l).add(p);
     }
 
@@ -146,7 +128,7 @@ public class G21944 {
             AlgoByLevel.get(g).add(l);
             return;
         }
-        AlgoByLevel.put(g, new TreeSet<>((o1, o2) -> o2 - o1));
+        AlgoByLevel.put(g, new TreeSet<>());
         AlgoByLevel.get(g).add(l);
     }
 
@@ -154,16 +136,31 @@ public class G21944 {
         int l = pL.get(p);
         int g = pG.get(p);
 
-        problemsByLevel.get(l).remove(p);
-        AlgoByLevel.get(g).remove(l);
         pL.remove(p, l);
         pG.remove(p, g);
+        problemsByLevel.get(l).remove(p);
+
+        if(problemsByLevel.get(l).isEmpty()){
+            problemsByLevel.remove(l);
+            AlgoByLevel.get(g).remove(l);
+
+            if(AlgoByLevel.get(g).isEmpty()){
+                AlgoByLevel.remove(g);
+            }
+            return;
+        }
+
+        Iterator<Integer> iter = problemsByLevel.get(l).iterator();
+        while(iter.hasNext()){
+            int problem = iter.next();
+            if(pG.get(problem) == g){
+                return;
+            }
+        }
+        AlgoByLevel.get(g).remove(l);
 
         if(AlgoByLevel.get(g).isEmpty()){
             AlgoByLevel.remove(g);
-        }
-        if(problemsByLevel.get(l).isEmpty()){
-            problemsByLevel.remove(l);
         }
     }
 }

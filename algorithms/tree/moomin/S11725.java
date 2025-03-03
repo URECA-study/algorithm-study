@@ -34,9 +34,8 @@ public class S11725 {
             arr[end].add(start);
         }
 
-        for(int i = 1; i<=N; i++) {
-            func(i);
-        }
+
+        func(0);
 
         for(int i: parent.values()){
             System.out.println(i);

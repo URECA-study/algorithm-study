@@ -3,7 +3,7 @@ package dynamic_programming_1.GainLee;
 import java.io.*;
 import java.util.*;
 
-public class Boj_11053_2 {
+public class Boj_11053 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
 

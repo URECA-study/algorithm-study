@@ -8,31 +8,56 @@ public class Boj_2206 {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringTokenizer st;
     static int[][] map;
-    static boolean[][] visit;
+    static boolean[][][] visit;
     static int n; static int m;
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
-    static int[][] new_map; // 거리 저장용 map
-    static Queue<int[]> queue = new LinkedList<>();
+    static Queue<Node> queue = new LinkedList<>();
 
-    public static void bfs (int x, int y) {
-        visit[x][y] = true;
-        queue.offer(new int[] {x, y});
+    public static class Node {
+        int x;
+        int y;
+        int count;
+        int wall;
+
+        public Node (int x, int y, int count, int wall) {
+            this.x = x;
+            this.y = y;
+            this.count = count;
+            this.wall = wall;
+        }
+    }
+
+    public static int bfs (int x, int y) {
+        visit[x][y][0] = true;
+        visit[x][y][1] = true;
+        queue.add(new Node(x, y, 1, 0));
 
         while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            int cx = cur[0];
-            int cy = cur[1];
+            Node cur = queue.poll();
+
+            if (cur.x == n-1 && cur.y == m-1) return cur.count;
+            int cx = cur.x ;
+            int cy = cur.y;
             for (int d = 0; d < 4; d++) {;
                 int nx = cx + dx[d];
                 int ny = cy + dy[d];
-                if (isValid(nx, ny) && !visit[nx][ny] && map[nx][ny] == 0) {
-                    visit[nx][ny] = true;
-                    new_map[nx][ny] += 1;
-                    queue.offer(new int[] {nx, ny});
+                if (isValid(nx, ny)){
+                    if (map[nx][ny] == 0) {
+                        if (visit[nx][ny][cur.wall] == false) {
+                            queue.add(new Node (nx, ny, cur.count + 1, cur.wall));
+                            visit[nx][ny][cur.wall] = true;
+                        }
+                    } else if (map[nx][ny] == 1) {
+                        if (cur.wall == 0 && visit[nx][ny][1] == false) {
+                            queue.add(new Node(nx, ny, cur.count + 1, 1));
+                            visit[nx][ny][1] = true;
+                        }
+                    }
                 }
             }
         } // while
+        return -1;
 
 
     } // bfs
@@ -49,7 +74,6 @@ public class Boj_2206 {
         m = Integer.parseInt(st.nextToken());
 
         map = new int[n][m];
-        new_map = new int[n][m];
         for (int i = 0; i < n; i++) {
             String line = br.readLine();
             for (int j = 0; j < m; j++) {
@@ -57,13 +81,7 @@ public class Boj_2206 {
             }
         } // map 입력
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (!visit[i][j]) {
-                    bfs(i, j);
-                }
-            }
-        }
-
+        visit = new boolean[n][m][2];
+        System.out.println(bfs(0, 0));
     } // main
 }

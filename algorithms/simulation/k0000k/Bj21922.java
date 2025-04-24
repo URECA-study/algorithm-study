@@ -51,24 +51,23 @@ public class Bj21922 {
     private static void airConditioner(int i, int j, int dirIdx) {
         while (isRange(i, j) && room[i][j] != 9) {
             prefer[i][j] = true;
-            if (room[i][j] == 1 && dirIdx % 2  == 1) { // 반대로 돌리기
+            if (room[i][j] == 1 && dirIdx % 2 == 1) { // 가로 방향만 반대로 돌리기
                 dirIdx = (dirIdx + 2) % 4;
             }
-            else if (room[i][j] == 2 && dirIdx % 2  == 0) { // 반대로 돌리기
+            else if (room[i][j] == 2 && dirIdx % 2 == 0) { // 세로 방향만 반대로 돌리기
                 dirIdx = (dirIdx + 2) % 4;
             }
             else if (room[i][j] == 3) {
                 if (dirIdx % 2 == 0) {
                     dirIdx += 1;
-                }
-                else {
+                } else {
                     dirIdx -= 1;
                 }
             }
             else if (room[i][j] == 4) {
                 dirIdx = (3 - dirIdx);
             }
-            i += directions[dirIdx][0];;
+            i += directions[dirIdx][0];
             j += directions[dirIdx][1];
         }
     }

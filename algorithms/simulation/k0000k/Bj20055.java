@@ -2,9 +2,7 @@ package simulation.k0000k;
 
 import java.io.*;
 import java.util.*;
-/*
-괜히 회전 큐 만들어서 돌리려고 머리쓰다가 시간을 많이 쓴 문제입니다! 어차피 n이 최대 100인데.. 그냥 배열 만들어서 풀어도 충분하네요.
- */
+
 public class Bj20055 {
 
     public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
